@@ -2,6 +2,7 @@ const std = @import("std");
 
 const base = "jstrieb/";
 const size = 64;
+const charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz/+";
 var most_zeroes: usize = 0;
 
 fn count_zeroes(a: []u8) usize {
@@ -29,7 +30,7 @@ fn try_all(in: []u8, out: *[32]u8, length: usize) void {
         }
         return;
     }
-    for ('a'..'z' + 1) |c| {
+    for (charset) |c| {
         in[base.len + length - 1] = @intCast(c);
         try_all(in, out, length - 1);
     }
@@ -40,8 +41,7 @@ pub fn main() !void {
     @memcpy(in[0..base.len], base);
     var out: [32]u8 = undefined;
     var length: usize = 1;
-    while (length < size - base.len) {
+    while (length < size - base.len) : (length += 1) {
         try_all(in[0 .. base.len + length], &out, length);
-        length += 1;
     }
 }
